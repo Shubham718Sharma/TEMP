@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Falling Objects</title>
+    <style>
+        body {
+            text-align: center;
+            background-color: #e0f7fa;
+        }
+        #game-container {
+            width: 400px;
+            height: 500px;
+            border: 2px solid black;
+            margin: auto;
+            position: relative;
+            background-color: #fff;
+            overflow: hidden;
+        }
+        .basket {
+            width: 80px;
+            height: 40px;
+            background-color: brown;
+            position: absolute;
+            bottom: 10px;
+            left: 160px;
+        }
+        .apple {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Catch the Falling Apples</h1>
+    <p>Move the basket left and right using arrow keys.</p>
+    <div id="game-container">
+        <div class="basket" id="basket"></div>
+    </div>
+    <script>
+        const gameContainer = document.getElementById("game-container");
+        const basket = document.getElementById("basket");
+        let basketPosition = 160;
+        let score = 0;
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowLeft" && basketPosition > 0) {
+                basketPosition -= 20;
+            } else if (event.key === "ArrowRight" && basketPosition < 320) {
+                basketPosition += 20;
+            }
+            basket.style.left = basketPosition + "px";
+        });
+
+        function createApple() {
+            const apple = document.createElement("div");
+            apple.classList.add("apple");
+            apple.style.left = Math.random() * 380 + "px";
+            apple.style.top = "0px";
+            gameContainer.appendChild(apple);
+
+            let fallInterval = setInterval(() => {
+                apple.style.top = apple.offsetTop + 5 + "px";
+                if (apple.offsetTop > 460) {
+                    if (
+                        apple.offsetLeft > basketPosition &&
+                        apple.offsetLeft < basketPosition + 80
+                    ) {
+                        score++;
+                        console.log("Score: " + score);
+                    }
+                    apple.remove();
+                    clearInterval(fallInterval);
+                }
+            }, 50);
+        }
+
+        setInterval(createApple, 1000);
+    </script>
+</body>
+</html>
